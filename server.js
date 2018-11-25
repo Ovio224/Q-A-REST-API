@@ -9,7 +9,41 @@ const routes = require('./routes');
 
 app.use(jsonParser());
 app.use(logger("dev"));
+
+const mongoose = require('mongoose');
+mongoose.connect("mongodb://localhost:27017/qa", {
+  useNewUrlParser: true
+});
+
+const db = mongoose.connection;
+
+db.on('error', (err) => {
+  console.error("connection error:" + err);
+});
+
+db.once('open', () => {
+  console.log("Connection to the db was succesesful");
+  // DB communication
+});
+
 app.use('/questions', routes);
+
+// catch 404 not found
+app.use((req, res, next) => {
+  const err = new Error("Not found");
+  err.status = 404;
+  next(err);
+});
+
+// error handler
+app.use((err, req, res, next) => {
+  res.status(err.status || 500);
+  res.json({
+    error: {
+      message: err.message
+    }
+  });
+});
 
 
 
