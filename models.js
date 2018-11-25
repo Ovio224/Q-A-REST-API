@@ -42,7 +42,7 @@ AnswerSchema.method("vote", function(vote, callback) {
   } else if(vote === "down") {
     this.votes -= 1;
   }
-  this.parent.save(callback)
+  this.parent().save(callback)
 });
 
 const QuestionSchema = new Schema({
